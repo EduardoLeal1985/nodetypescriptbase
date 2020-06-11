@@ -1,10 +1,15 @@
+/* eslint-disable camelcase */
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinColumn,
 } from 'typeorm';
+
+import User from './User';
 
 @Entity('appointments')
 class Appointment {
@@ -12,16 +17,20 @@ class Appointment {
   id: string;
 
   @Column('varchar')
-  providerId: string;
+  provider_id: string;
+
+  @ManyToMany(() => User)
+  @JoinColumn({ name: 'providerId' })
+  provider: User;
 
   @Column('timestamp with time zone')
   date: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export default Appointment;
