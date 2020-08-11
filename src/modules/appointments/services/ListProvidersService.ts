@@ -3,30 +3,25 @@ import { injectable, inject } from 'tsyringe';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 
 import User from '@modules/users/infra/typeorm/entities/User';
-import AppError from '@shared/errors/AppError';
 
 interface IRequest {
   user_id: string;
 }
 
 @injectable()
-class ShowProfileService {
+class ListProvidersService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({ user_id }: IRequest): Promise<User> {
-    const user = await this.usersRepository.findById(user_id);
+  public async execute({ user_id }: IRequest): Promise<User[]> {
+    const users = await this.usersRepository.findAllProviders({
+      except_user_id: user_id,
+    });
 
-    if (!user) {
-      throw new AppError('User not found');
-    }
-
-    delete user.password;
-
-    return user;
+    return users;
   }
 }
 
-export default ShowProfileService;
+export default ListProvidersService;
